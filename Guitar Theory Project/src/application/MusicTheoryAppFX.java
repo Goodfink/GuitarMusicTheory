@@ -1,11 +1,13 @@
 package application;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -14,6 +16,7 @@ public class MusicTheoryAppFX extends Application {
 	private TextField keyTextField;
 	private TextField genreTextField;
 	private TextArea outputTextArea;
+	private TextArea chordProgressionsTextArea;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -23,39 +26,57 @@ public class MusicTheoryAppFX extends Application {
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Guitar Music Theory App");
 
-		// Create the UI components
+		// Create UI components for input
 		Label keyLabel = new Label("Enter the key:");
 		Label genreLabel = new Label("Enter the genre:");
 		keyTextField = new TextField();
 		genreTextField = new TextField();
-		Button showScalesButton = new Button("Show Scales");
+		Button showScalesButton = new Button("Confirm");
+
+		// Labels for output sections
+		Label scalesLabel = new Label("Commonly Used Scales:");
+		Label chordProgressionsLabel = new Label("Commonly Used Chord progressions:");
+
+		// TextAreas for output
 		outputTextArea = new TextArea();
+		chordProgressionsTextArea = new TextArea();
 
-		// Customization for the labels
-		keyLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black");
-		genreLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black");
-		showScalesButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white");
+		// Set the preferred sizes for the TextAreas
+		outputTextArea.setPrefWidth(1000); // Adjust this value as needed
+		outputTextArea.setPrefHeight(1000); // Adjust this value as needed
 
-		// Button customization
-		showScalesButton.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: black;");
-
-		// Customization for ouputTextArea
-		outputTextArea.setPrefWidth(1000);
-		outputTextArea.setPrefHeight(600);
-		outputTextArea.setStyle("-fx-background-color: black; -fx-text-fill: black;");
+		chordProgressionsTextArea.setPrefWidth(1000); // Adjust this value as needed
+		chordProgressionsTextArea.setPrefHeight(1000); // Adjust this value as needed
 
 		// Handle the button click event
-		showScalesButton.setOnAction(e -> showScales());
+		showScalesButton.setOnAction(e -> {
+			showScales();
+			showProgressions();
+		});
 
-		// Create the scene
-		VBox vbox = new VBox(10);
-		// customization for the scene
-		vbox.setStyle("-fx-background-color: rgb(253, 223, 175);");
+		// Create VBox for inputs and button
+		VBox inputVBox = new VBox(10, keyLabel, keyTextField, genreLabel, genreTextField, showScalesButton);
 
-		vbox.getChildren().addAll(keyLabel, keyTextField, genreLabel, genreTextField, showScalesButton, outputTextArea);
-		Scene scene = new Scene(vbox, 1600, 900);
+		// Create VBox for scales output with title
+		VBox scalesOutputVBox = new VBox(5, scalesLabel, outputTextArea);
+		scalesOutputVBox.setStyle("-fx-padding: 10;");
+
+		// Create VBox for chord progressions output with title
+		VBox chordProgressionsVBox = new VBox(5, chordProgressionsLabel, chordProgressionsTextArea);
+		chordProgressionsVBox.setStyle("-fx-padding: 10;");
+
+		// Create HBox to contain both VBoxes for output
+		HBox outputHBox = new HBox(20, scalesOutputVBox, chordProgressionsVBox);
+		outputHBox.setStyle("-fx-alignment: center-left;");
+
+		// Create the main VBox to hold all components
+		VBox mainVBox = new VBox(20, inputVBox, outputHBox);
+		mainVBox.setPadding(new Insets(15, 20, 15, 20));
+		mainVBox.setStyle("-fx-background-color: lavender;");
+
+		// Set the scene
+		Scene scene = new Scene(mainVBox, 1200, 800);
 		primaryStage.setScene(scene);
-
 		primaryStage.show();
 	}
 
@@ -70,4 +91,15 @@ public class MusicTheoryAppFX extends Application {
 		// Display the content in the outputTextArea
 		outputTextArea.setText(content);
 	}
+
+	private void showProgressions() {
+		String key = keyTextField.getText();
+		String genre = genreTextField.getText();
+
+		String fileNameProgression = Main_Utilities.file_Name_progression(key, genre);
+		String content = Main_Utilities.file_Output(fileNameProgression);
+
+		chordProgressionsTextArea.setText(content);
+	}
+
 }
