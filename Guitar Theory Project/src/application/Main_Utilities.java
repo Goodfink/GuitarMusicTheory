@@ -37,6 +37,13 @@ public class Main_Utilities {
 
 	}
 
+	public static String file_Name_progression(String Key, String Genre) {
+
+		String file_Name_Progression = Genre.toLowerCase() + "_" + Key.toLowerCase() + "_" + "progressions" + ".txt";
+
+		return file_Name_Progression;
+	}
+
 	// getting the content from the file and out-puting it onto the screen
 	public static String file_Output(String file_Name) {
 		int singleDigitFretSpacing = 5; // 2 spaces before single-digit, fret number, then 2 spaces after
